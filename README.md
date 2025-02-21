@@ -1,3 +1,3 @@
-# SSAFY 에서 푼 문제들
+# SSAFY 에서 푼 문제
 백준 & SWEA
 
