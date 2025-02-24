@@ -24,6 +24,7 @@ public class Main {
 		if(depth == n/2) {
 			int startTeam=0;
 			int linkTeam=0;
+			//n/2만큼 선택되면 isSelected이 true인 곳이 startTeam, false인곳이 linkTeam
 			for(int i=1;i<=n;i++) {
 				if(isSelected[i]) {
 					for(int j=1;j<=n;j++) {
@@ -44,6 +45,7 @@ public class Main {
 			return;
 		}
 		for(int i=start;i<=n;i++) {
+			//선택된 값 인덱스위치에 true
 			isSelected[i] = true; 
 			Combination(depth+1,i+1);
 			isSelected[i] = false;
