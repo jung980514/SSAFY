@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.*;
-
+/*
+ * 26,368 kb 메모리
+	87 ms 실행시간
+ */
 public class Solution {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	public static void main(String[] args) throws IOException{
@@ -17,6 +20,7 @@ public class Solution {
 				char[] line = br.readLine().toCharArray();
 				for(int k=0;k<w;k++) {
 					map[j][k] = line[k];
+					//^ v < > 에 따라 전차 위치와 방향 저장
 					if(map[j][k]=='^') {
 						tank[0] = j;
 						tank[1] = k;
@@ -42,8 +46,10 @@ public class Solution {
 			int n = Integer.parseInt(br.readLine());
 			char[] input = br.readLine().toCharArray();
 			for(int j=0;j<n;j++) {
+				// U D L R S 에 따라 조건문 실행
 				switch (input[j]) {
 				case 'U':
+					//U일때는 방향 위로 바꾸고 위 값이 .이면 해당 위치로 이동
 					if(tank[0]-1>=0 && map[tank[0]-1][tank[1]]=='.') { 
 						map[tank[0]-1][tank[1]] = '^';
 						map[tank[0]][tank[1]] = '.';
@@ -56,6 +62,7 @@ public class Solution {
 					}
 					break;
 				case 'D':
+					//D일때는 방향 아래로 바꾸고 아래 값이 .이면 해당 위치로 이동
 					if(tank[0]+1<h && map[tank[0]+1][tank[1]]=='.') { 
 						map[tank[0]+1][tank[1]] = 'v';
 						map[tank[0]][tank[1]] = '.';
@@ -68,6 +75,7 @@ public class Solution {
 					}	
 					break;
 				case 'L':
+					//L일때는 방향 왼쪽으로 바꾸고 왼쪽 값이 .이면 해당 위치로 이동
 					if(tank[1]-1>=0 && map[tank[0]][tank[1]-1]=='.') { 
 						map[tank[0]][tank[1]-1]='<';
 						map[tank[0]][tank[1]] = '.';
@@ -80,6 +88,7 @@ public class Solution {
 					}
 					break;
 				case 'R':
+					//R일때는 방향 오른쪽으로 바꾸고 오른쪽 값이 .이면 해당 위치로 이동
 					if(tank[1]+1<w && map[tank[0]][tank[1]+1]=='.') {
 						map[tank[0]][tank[1]+1]='>';
 						map[tank[0]][tank[1]] = '.';
@@ -94,6 +103,9 @@ public class Solution {
 				case 'S':
 					int sx = tank[0];
 					int sy = tank[1];
+					//전차가 보고있는 방향에 따라 shoot 다르게 구현
+					//전차의 현재 위치에서 보고있는 방향으로 포탄 좌표를 이동하면서 벽돌(*)을 만나면 부수고 break
+					//포탄이 강철(#)을 만나거나 맵 밖으로 나가면 아무일도 일어나지않고 break;
 					if(tank[2]==1) {
 						while(sx>=0) {
 							if(map[sx][sy]=='*') {
