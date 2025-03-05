@@ -11,17 +11,27 @@ public class Main {
 	public static void main(String[] args) throws IOException{
 		int n = Integer.parseInt(br.readLine());
 		column = new boolean[n];
-		diag1 = new boolean[2*n-1];
-		diag2 = new boolean[2*n-1];
-		NQueen(0,n,0);
+		diag1 = new boolean[2*n-1]; // x+y 최대값이 (n-1) + (n-1)
+		diag2 = new boolean[2*n-1]; // x-y + (n-1) 최대값 2n-2
+		NQueen(n,0);
+//		System.out.println("반만:"+result);
+		result*=2;
+		if(n%2==1) {
+			column[n/2] = true;
+			diag1[0+n/2] = true;
+			diag2[0-n/2+n-1] = true;
+			NQueen(n, 1);
+		}
 		System.out.println(result);
 	}
-	public static void NQueen(int cnt,int n,int row) {
-		if(cnt == n) {
+	public static void NQueen(int n,int row) {
+		if(row == n) {
 			result++;
 			return;
 		}
-		for(int col=0;col<n;col++) {
+		int size= row==0?n/2: n;	
+		
+		for(int col=0;col<size;col++) {
 			//같은 열이나 대각선이면 무시
 			if(column[col] || diag1[row+col] || diag2[row-col+n-1])
 				continue;
@@ -32,7 +42,7 @@ public class Main {
 			diag2[row-col+n-1] = true;
 			
 			//다음 행으로 이동
-			NQueen(cnt+1,n,row+1);
+			NQueen(n,row+1);
 			
 			//백트래킹
 			column[col] = false;
