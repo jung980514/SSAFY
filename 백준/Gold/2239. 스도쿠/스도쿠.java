@@ -14,31 +14,9 @@ public class Main {
 				map[i][j] = c[j-1]-'0';
 				if(map[i][j]!=0) {
 					rowvisited[i][map[i][j]] = true;
-					colvisited[j][map[i][j]] = true;	
-					if(i<=3) {
-						if(j<=3)
-							boxvisited[1][map[i][j]] = true;
-						else if(j<=6)
-							boxvisited[4][map[i][j]] = true;
-						else
-							boxvisited[7][map[i][j]] = true;
-					}
-					else if(i<=6) {
-						if(j<=3)
-							boxvisited[2][map[i][j]] = true;
-						else if(j<=6)
-							boxvisited[5][map[i][j]] = true;
-						else
-							boxvisited[8][map[i][j]] = true;
-					}
-					else {
-						if(j<=3)
-							boxvisited[3][map[i][j]] = true;
-						else if(j<=6)
-							boxvisited[6][map[i][j]] = true;
-						else
-							boxvisited[9][map[i][j]] = true;
-					}
+				    colvisited[j][map[i][j]] = true;
+				    int boxNumber = ((i-1)/3)*3+((j-1)/3)+1;
+				    boxvisited[boxNumber][map[i][j]] = true;
 				}
 			}
 		}
@@ -50,31 +28,7 @@ public class Main {
 			print();
 			System.exit(0);			
 		}
-		int pos;
-		if(x<=3) {
-			if(y<=3)
-				pos = 1;
-			else if(y<=6)
-				pos = 4;
-			else
-				pos = 7;
-		}
-		else if(x<=6) {
-			if(y<=3)
-				pos = 2;
-			else if(y<=6)
-				pos = 5;
-			else
-				pos = 8;
-		}
-		else {
-			if(y<=3)
-				pos = 3;
-			else if(y<=6)
-				pos = 6;
-			else
-				pos = 9;
-		}
+		int pos=((x-1)/3)*3+((y-1)/3)+1;
 		if(map[x][y]==0) {
 			for(int i=1;i<=9;i++) {
 				if(!rowvisited[x][i] && !colvisited[y][i] && !boxvisited[pos][i]) {
