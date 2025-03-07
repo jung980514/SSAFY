@@ -1,6 +1,14 @@
 import java.io.*;
 import java.util.*;
-
+/*	우선순위 큐를 이용하여 작은값 반환
+ * 	단순 sort후 계산시 반례
+ *  5
+	10 30 30 40 50   	->40
+	30 40 40 50 ->70
+	40 50 70 ->90
+	70 90 -> 160
+	40+70+90+160 = 360
+ */
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int result = 0;
