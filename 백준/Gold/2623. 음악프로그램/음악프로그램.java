@@ -1,9 +1,12 @@
 import java.io.*;
 import java.util.*;
-
+/*
+ * 메모리 15108KB
+ * 시간 128ms
+ */
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	static int[] in;
+	static int[] in; //진입차수 저장
 	static boolean[] visited;
 	static ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
 	public static void main(String[] args) throws IOException{
@@ -35,6 +38,7 @@ public class Main {
 		}
 		while(!q.isEmpty()) {
 			int temp = q.poll();
+			//순서정해진 가수 세기
 			sb.append(temp+"\n");
 			count++;
 			//해당 노드와 연결된 간선 제거(연결된 노드 진입차수 -1)
@@ -49,6 +53,7 @@ public class Main {
 				}
 			}
 		}
+		//가수의 수만큼 순서 정해졌다면 출력 불가능하면 0출력
 		if(count==n) System.out.print(sb.toString());
 		else System.out.println(0);
 		
