@@ -17,9 +17,9 @@ public class Main {
 	}
 	
 	static int find(int n) {
-		if(parent[n] != n)
-			parent[n] = find(parent[n]);
-		return parent[n];
+		if(parent[n] == n)
+			return n;
+		return parent[n] = find(parent[n]);
 	}
 	public static void main(String[] args) throws IOException{
 		String[] s = br.readLine().split(" ");
