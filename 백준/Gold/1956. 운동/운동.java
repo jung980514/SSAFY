@@ -11,7 +11,7 @@ public class Main {
 		int e = Integer.parseInt(s[1]);
 		dist = new int[v+1][v+1];
 		for(int i=1;i<=v;i++) {
-			Arrays.fill(dist[i], INF);
+			Arrays.fill(dist[i],INF);
 		}
 		for(int i=0;i<e;i++) {
 			String[] s2 = br.readLine().split(" ");
@@ -31,10 +31,10 @@ public class Main {
 		}
 		int min = INF;
 		//i -> j -> i 로 돌아오는 것중에 최소값
-		for (int i = 1; i <= v; i++) {
-			for (int j = 1; j <= v; j++) {
-				if (i != j && dist[i][j] < INF && dist[j][i] < INF) {
-					min = Math.min(min, dist[i][j] + dist[j][i]);
+		for(int i=1;i<=v;i++) {
+			for(int j=1;j<=v;j++) {
+				if (i!=j && dist[i][j]<INF && dist[j][i]<INF) {
+					min = Math.min(min, dist[i][j]+dist[j][i]);
 				}
 			}
 		}
