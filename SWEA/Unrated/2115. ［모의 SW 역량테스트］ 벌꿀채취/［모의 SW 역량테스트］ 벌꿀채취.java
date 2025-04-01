@@ -46,19 +46,21 @@ public class Solution {
 	}
 
 	static int getMaxProfit(int x,int y) {
-		int[] arr=new int[m];
-		for(int i=0;i<m;i++) arr[i]=honey[x][y+i];
-		int res=0;
-		for(int i=1;i<(1<<m);i++) {
-			int sum=0,val=0;
-			for(int j=0;j<m;j++) {
-				if((i&(1<<j))!=0) {
-					sum+=arr[j];
-					val+=arr[j]*arr[j];
-				}
-			}
-			if(sum<=c&&val>res) res=val;
+		//Knapsack Problem
+		int[] w = new int[m]; // 무게 = 꿀 양
+		int[] v = new int[m]; // 가치 = 꿀 제곱
+		for(int i=0;i<m;i++) {
+			w[i] = honey[x][y+i];
+			v[i] = w[i]*w[i];
 		}
-		return res;
+		int[][] dp=new int[m+1][c+1]; // dp[i][j] = i번째까지 봤을 때, 용량 j로 얻을 수 있는 최대 수익
+		for(int i=1;i<=m;i++) {
+			for(int j=0;j<=c;j++) {
+				if(w[i-1]>j) dp[i][j]=dp[i-1][j];
+				else dp[i][j]=Math.max(dp[i-1][j],dp[i-1][j-w[i-1]]+v[i-1]);
+			}
+		}
+		return dp[m][c];
 	}
+
 }
