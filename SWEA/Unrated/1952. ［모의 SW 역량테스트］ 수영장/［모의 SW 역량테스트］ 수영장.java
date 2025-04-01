@@ -12,24 +12,21 @@ public class Solution {
 			int month3 = Integer.parseInt(s[2]);
 			int year1 = Integer.parseInt(s[3]);
 			String[] s2 = br.readLine().split(" ");
-			int[] plan = new int[12];
+			int[] plan = new int[13];
 			for(int j=0;j<12;j++) {
-				plan[j] = Integer.parseInt(s2[j]);
+				plan[j+1] = Integer.parseInt(s2[j]);
 			}
-			int[] dp = new int[12];
-			dp[0] = Math.min(plan[0]*day1, month1);
-			for(int j=1;j<12;j++) {
-				if(j>1) {
-					if(j==2)
-						dp[j] = Math.min(Math.min(dp[j-1]+ plan[j]*day1, dp[j-1]+month1) ,month3);
-					else
-						dp[j] = Math.min(Math.min(dp[j-1]+ plan[j]*day1, dp[j-1]+month1) , dp[j-3]+month3);
+			int[] dp = new int[13];
+			dp[1] = Math.min(plan[1]*day1, month1);
+			for(int j=2;j<=12;j++) {
+				if(j>2) {
+					dp[j] = Math.min(Math.min(dp[j-1]+ plan[j]*day1, dp[j-1]+month1) , dp[j-3]+month3);
 				}
 				else {
 					dp[j] = Math.min(dp[j-1]+ plan[j]*day1, dp[j-1]+month1);
 				}
 			}
-			System.out.println("#"+i+" "+ Math.min(dp[11], year1));
+			System.out.println("#"+i+" "+ Math.min(dp[12], year1));
 		}
 		
 	}
