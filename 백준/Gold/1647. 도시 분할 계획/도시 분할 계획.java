@@ -15,6 +15,7 @@ public class Main {
 			this.cost = cost;
 		}
 	}
+	//Union-Find
 	public static void union(int x, int y) {
 		int a = find(x);
 		int b = find(y);
@@ -30,6 +31,7 @@ public class Main {
 			return parent[x] = find(parent[x]);
 		return parent[x];
 	}
+	
 	public static void main(String[] args) throws IOException{
 		String[] s = br.readLine().split(" ");
 		int n = Integer.parseInt(s[0]);
@@ -49,6 +51,7 @@ public class Main {
 		}
 		int sum = 0;
 		int maxCost = 0;
+		//MST 마지막 값을 maxCost에 저장해 전체 비용에서 빼준다
 		while(!pq.isEmpty()) {
 			Edge tmp = pq.poll();
 			if(find(tmp.x)!= find(tmp.y)) {
