@@ -24,6 +24,7 @@ public class Solution {
 						count = Math.max(count, countHouse(j,k,n,m,area));
 					}
 				}
+				//큰 범위부터 보기 때문에 손해안보는 상황이 나오면 break
 				if(count!=0)
 					break;
 			}
@@ -34,12 +35,14 @@ public class Solution {
 	    int house = 0;
 	    for (int i=0; i<n; i++) {
 	        for (int j=0; j<n; j++) {
+	        	//맨허튼 거리가 k보다 작고 집이 존재할때
 	            if (Math.abs(x-i) + Math.abs(y-j)<k && map[i][j] == 1) {
 	                house++;
 	            }
 	        }
 	    }
 	    int cost = k*k + (k-1)*(k-1);
+	    //손해안보면 집 반환
 	    if (house*m >= cost) return house;
 	    return -1;
 	}
