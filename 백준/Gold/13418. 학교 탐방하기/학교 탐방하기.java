@@ -15,6 +15,8 @@ public class Main {
 	}
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static int[] parent;
+	
+	//Union-Find 
 	public static void union(int x,int y) {
 		int a = find(x);
 		int b = find(y);
@@ -29,19 +31,17 @@ public class Main {
 			return parent[x] = find(parent[x]);
 		return parent[x];
 	}
+	
 	public static void main(String[] args) throws IOException{
 		String[] s = br.readLine().split(" ");
 		int n = Integer.parseInt(s[0]);
 		int m = Integer.parseInt(s[1]);
+		
 		PriorityQueue<Edge> pq1 = new PriorityQueue<>((a,b) -> a.cost-b.cost);//오르막길 우선
 		PriorityQueue<Edge> pq2 = new PriorityQueue<>((a,b) -> b.cost-a.cost);//내리막길 우선
 		int count1 = 0;
 		int count2 = 0;
 		
-		parent = new int[n+1];
-		for(int i=0;i<=n;i++) {
-			parent[i] = i;
-		}
 		
 		for(int i=0;i<=m;i++) {
 			String[] s2 = br.readLine().split(" ");
@@ -52,6 +52,12 @@ public class Main {
 			pq2.add(new Edge(a,b,c));
 		}
 		
+		// 오르막길 최대로 뽑는 경우
+		parent = new int[n+1];
+		for(int i=0;i<=n;i++) {
+			parent[i] = i;
+		}
+		//MST 생성
 		while(!pq1.isEmpty()) {
 			Edge tmp = pq1.poll();
 			if(find(tmp.x)!=find(tmp.y)) {
@@ -62,11 +68,12 @@ public class Main {
 			}
 		}	
 		
+		//내리막길 최대로 뽑는 경우
 		parent = new int[n+1];
 		for(int i=0;i<=n;i++) {
 			parent[i] = i;
 		}
-				
+		//MST 생성
 		while(!pq2.isEmpty()) {
 			Edge tmp = pq2.poll();
 			if(find(tmp.x)!=find(tmp.y)) {
