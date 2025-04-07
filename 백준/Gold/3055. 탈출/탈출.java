@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.*;
-
+/*
+ * 메모리:11940KB
+ * 시간:72ms
+ */
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static char[][] map;
@@ -51,24 +54,29 @@ public class Main {
 		
 		A:while(!q.isEmpty()) {
 			int[] tmp = q.poll();
-			if(tmp[2]==0) {//고슴도치일때
+			//고슴도치일때
+			if(tmp[2]==0) {
 				for(int i=0;i<4;i++) {
 					int nx = tmp[0]+dx[i];
 					int ny = tmp[1]+dy[i];
+					//도착하면 break
 					if(nx==endX && ny==endY) {
 						result = tmp[3]+1;
 						break A;
 					}
+					//물,돌이 없고 방문하지 않은 곳으로 이동
 					if(isRange(nx,ny) && !visited[nx][ny]) {
 						q.offer(new int[] {nx,ny,0,tmp[3]+1});
 						visited[nx][ny] = true;
 					}
 				}
 			}
-			else {//물일때
+			//물일때
+			else {
 				for(int i=0;i<4;i++) {
 					int nx = tmp[0]+dx[i];
 					int ny = tmp[1]+dy[i];
+					//범위 안이고 비어있는 곳에 물 이동
 					if(isRange(nx,ny) && !visited[nx][ny] && map[nx][ny]=='.') {
 						q.offer(new int[] {nx,ny,1,tmp[3]+1});
 						visited[nx][ny]= true;
