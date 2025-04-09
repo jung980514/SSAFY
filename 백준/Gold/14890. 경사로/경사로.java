@@ -37,8 +37,12 @@ public class Main {
 			int cur = map[i][0];
 			boolean flag = true;
 			for(int j=1;j<n;j++) {
+				//다음 값이 큰값이면 
 				if(cur < map[i][j]) {
+					//현재값 개수 / x 가 다음값-현재값보다 크다면
 					if(map[i][j]-cur <= counts[i][idx]/x) {
+						//개수를 그만큼 줄이고 다음값으로 이동
+						//개수 줄이는 이유는 221112 경우에 겹쳐서 경사로 만들어지는 것을 방지하기위해서
 						counts[i][idx] -= (map[i][j]-cur)*x;
 						cur = map[i][j];
 						idx++;
@@ -48,9 +52,13 @@ public class Main {
 						break;
 					}
 				}
+				//다음 값이 작은값이면
 				else if(cur > map[i][j]) {
 					idx++;
+					//다음값 개수 / x 가 다음값-현재값보다 크다면
 					if(cur-map[i][j] <= counts[i][idx]/x) {
+						//개수를 그만큼 줄이고 다음값으로 이동
+						//개수 줄이는 이유는 21112 경우에 겹쳐서 경사로 만들어지는 것을 방지하기위해서
 						counts[i][idx] -= (cur-map[i][j])*x;
 						cur = map[i][j];
 					}
@@ -64,7 +72,7 @@ public class Main {
 				result++;
 			}
 		}
-		
+		//세로일 경우도 똑같이 수행
 		//세로 개수 카운팅
 		counts = new int[n][n];
 		for(int i=0;i<n;i++) {
