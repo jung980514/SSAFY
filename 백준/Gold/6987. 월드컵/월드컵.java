@@ -6,7 +6,7 @@ public class Main {
 						//할수있는 경기 15경기
 	static int[] teamA = {0,0,0,0,0,1,1,1,1,2,2,2,3,3,4};
 	static int[] teamB = {1,2,3,4,5,2,3,4,5,3,4,5,4,5,5};
-	static boolean isPossible;
+	static boolean flag;
 
 	public static void main(String[] args) throws IOException {
 		for(int t=0;t<4;t++) {
@@ -18,19 +18,20 @@ public class Main {
 				}
 			}
 
-			isPossible=false;
+			flag=false;
 			
-			if(isValid()) 
+			if(isWorldCup()) 
 				dfs(0);
-			System.out.print(isPossible?"1 ":"0 ");
+			System.out.print(flag?"1 ":"0 ");
 		}
 	}
 	//각 팀의 승,무,패 합이 5이고 전체 합이 30이어야 가능
-	public static boolean isValid() {
+	public static boolean isWorldCup() {
 		int total=0;
 		for(int i=0;i<6;i++) {
 			int sum=map[i][0]+map[i][1]+map[i][2];
-			if(sum!=5) return false;
+			if(sum!=5) 
+				return false;
 			total+=sum;
 		}
 		return total==30;
@@ -38,7 +39,7 @@ public class Main {
 
 	public static void dfs(int depth) {
 		if(depth==15) {
-			isPossible=true;
+			flag=true;
 			return;
 		}
 		
