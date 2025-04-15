@@ -32,9 +32,11 @@ public class Main {
         a %= mod;
 
         while (b>0) {
-            if ((b&1) == 1) result = result * a % mod;
-            a = a * a % mod;
-            b >>= 1;
+            if (b%2 == 1) {
+                result = result*a % mod;
+            }
+            a = a*a % mod;
+            b = b/2;
         }
         return result;
 	}
