@@ -12,6 +12,7 @@ public class Main {
 		}
 		int[] dp = new int[n+1];
 		int max = 0;
+		//dp[i] = i번까지 1씩 증가하는 부분수열 길이
 		for(int i=1;i<=n;i++) {
 			dp[child[i]] = dp[child[i]-1]+1;
 			max = Math.max(max, dp[child[i]]);
