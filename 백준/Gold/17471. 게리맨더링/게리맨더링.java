@@ -2,94 +2,81 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	public static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	public static ArrayList<ArrayList<Integer>> graph = new ArrayList<>();
-	public static int[] populations;
-	public static int[] arr;
-	public static boolean[] visited;
-	public static int count = Integer.MAX_VALUE;
-	public static void main(String[] args) throws IOException {
-		int n = Integer.parseInt(br.readLine());
-		String[] s = br.readLine().split(" ");
-		populations = new int[n+1];
-		arr = new int[n+1];
-		for(int i=1;i<=s.length;i++) {
-			populations[i] = Integer.parseInt(s[i-1]);
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static int[] population;
+	static ArrayList<Integer>[] graph;
+	static int min = Integer.MAX_VALUE;
+	static int n;
+	public static void main(String[] args) throws IOException{
+		n = Integer.parseInt(br.readLine());
+		String[] pop = br.readLine().split(" ");
+		population = new int[n];
+		for(int i=0;i<n;i++) {
+			population[i] = Integer.parseInt(pop[i]);
 		}
-		for(int i=0;i<=n;i++) {
-			graph.add(new ArrayList<Integer>());
-		}
-		for(int i=1;i<=n;i++) {
-			String[] zones = br.readLine().split(" ");
-			for(int j=1;j<=Integer.parseInt(zones[0]);j++) {
-				graph.get(i).add(Integer.parseInt(zones[j]));
+		graph = new ArrayList[n];
+		for(int i=0;i<n;i++) 
+			graph[i]=new ArrayList<>();
+		for(int i=0;i<n;i++) {
+			String[] s2 = br.readLine().split(" ");
+			int cnt = Integer.parseInt(s2[0]);
+			for(int j=0;j<cnt;j++) {
+				graph[i].add(Integer.parseInt(s2[j+1])-1);
 			}
-		}
-		for(int i=1;i<=n;i++) {
-			arr[i] = i;
 		}
 		for(int i=1;i<=n/2;i++) {
-			int[] result = new int[i];
-			boolean[] isCom = new boolean[n+1];
-			Combination(isCom,result,1,0,n,i);	
+			Comb(new boolean[n],n,i,0,0);
 		}
-		if(count == Integer.MAX_VALUE) System.out.println(-1);
-		else System.out.println(count);
+		System.out.println(min==Integer.MAX_VALUE?-1:min);
 	}
-	public static void Combination(boolean[] isCom,int[] result,int start,int depth,int n,int r) {
-		if(depth == r) {
-			int[] restArr = new int[n-r];
-			int pos = 0;
-			for(int i=1;i<=n;i++) {
-				if(!isCom[i]) {
-					restArr[pos] = arr[i];
-					pos++;
-				}
+	public static void Comb(boolean[] selected, int n, int r, int cnt, int idx) {
+		if(cnt==r) {
+			ArrayList<Integer> A = new ArrayList<>();
+			ArrayList<Integer> B = new ArrayList<>();
+			for(int i=0;i<n;i++) {
+				if(selected[i])A.add(i);
+				else B.add(i);
 			}
-			ArrayList<Integer> flag1 = new ArrayList<>();
-			HashSet<Integer> group1 = new HashSet<>();
-			for (int num : result) {
-			    group1.add(num);
-			}
-			visited = new boolean[n+1];
-			isDfs(flag1,result[0],group1);
-			ArrayList<Integer> flag2 = new ArrayList<>();
-			HashSet<Integer> group2 = new HashSet<>();
-			for (int num : restArr) {
-			    group2.add(num);
-			}
-			visited = new boolean[n+1];
-			isDfs(flag2,restArr[0],group2);
-			if(flag1.size() == result.length && flag2.size() == restArr.length) {
-				int sum1 = 0;
-				int sum2 = 0;
-				for(int i=0;i<result.length;i++) {
-					sum1 += populations[result[i]];
+			if(isConnected(A) && isConnected(B)) {
+				int popA=0;
+				int popB=0;
+				for(int a : A) {
+					popA += population[a];
 				}
-				for(int i=0;i<restArr.length;i++) {
-					sum2 += populations[restArr[i]];
+				for(int b : B) {
+					popB += population[b];
 				}
-				if(count>Math.abs(sum1-sum2)) {
-					count = Math.abs(sum1-sum2);
-				}
+				min = Math.min(min, Math.abs(popA-popB));
 			}
 			return;
 		}
-		for(int i=start;i<=n;i++) {
-			result[depth]= arr[i];
-			isCom[i] = true;
-			Combination(isCom,result,i+1,depth+1,n,r);
-			isCom[i] = false;
-		}
+		if(idx==n) return;
+		
+		selected[idx]=true;
+		Comb(selected,n,r,cnt+1,idx+1);
+		selected[idx]=false;
+		Comb(selected,n,r,cnt,idx+1);
+		
 	}
-	public static void isDfs(ArrayList<Integer> flag1,int node,HashSet<Integer> group) {
-		flag1.add(node);
-		visited[node] = true;
-
-		for(int i : graph.get(node)) {
-			if(!visited[i] && group.contains(i)) {
-				isDfs(flag1,i,group);
+	public static boolean isConnected(ArrayList<Integer> lis) {
+		if(lis.isEmpty()) return false;
+		boolean[] visited = new boolean[n];
+		Queue<Integer> q = new ArrayDeque<>();
+		q.offer(lis.get(0));
+		visited[lis.get(0)]=true;
+		
+		int count=1;
+		while(!q.isEmpty()) {
+			int tmp = q.poll();
+			for(int node : graph[tmp]) {
+				if(lis.contains(node) && !visited[node]) {
+					q.offer(node);
+					count++;
+					visited[node] = true;
+				}
 			}
 		}
+		return count==lis.size();
+		
 	}
 }
