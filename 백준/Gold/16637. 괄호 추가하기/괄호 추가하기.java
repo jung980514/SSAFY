@@ -7,8 +7,8 @@ public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in)); // static 선언
 
     public static void main(String[] args) throws IOException {
-        N = Integer.parseInt(br.readLine()); // 첫 줄: 수식 길이
-        expression = br.readLine().toCharArray(); // 두 번째 줄: 공백 없이 수식
+        N = Integer.parseInt(br.readLine()); 
+        expression = br.readLine().toCharArray(); 
 
         dfs(0, expression[0] - '0'); // DFS 탐색 시작
         System.out.println(maxResult); // 결과 출력
@@ -42,6 +42,6 @@ public class Main {
             case '-': return a - b;
             case '*': return a * b;
         }
-        return 0; // 도달 불가
+        return 0; 
     }
 }
