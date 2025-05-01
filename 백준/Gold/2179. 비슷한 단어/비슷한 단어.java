@@ -3,99 +3,70 @@ import java.util.*;
 
 public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static final int INF = Integer.MAX_VALUE;
+
+    // Trie 노드
+    static class Node {
+        Node[] next = new Node[26];
+        int first = INF, second = INF; // 이 노드를 지나는 단어 중 입력 순서가 빠른 두 개 저장
+    }
+
+    static Node root = new Node();
+    static int maxLen = 0;
+    static int bestS = INF, bestT = INF;
 
     public static void main(String[] args) throws IOException {
         int n = Integer.parseInt(br.readLine());
         String[] words = new String[n];
-        int[] order = new int[n];         // 입력 순서 저장
 
+        // 입력 단어 및 Trie에 삽입
         for (int i = 0; i < n; i++) {
             words[i] = br.readLine();
-            order[i] = i;
+            insert(words[i], i);
         }
 
-        // 사전순 정렬용 인덱스 배열
-        Integer[] sort = new Integer[n];
-        for (int i = 0; i < n; i++) sort[i] = i;
-        Arrays.sort(sort, (a, b) -> words[a].compareTo(words[b]));
+        // Trie 탐색으로 최대 접두사와 단어 쌍 찾기
+        dfs(root, 0);
 
-        // 인접한 정렬된 쌍의 LCP 계산
-        int[] lcp = new int[n];
-        lcp[0] = 0;
-        for (int i = 1; i < n; i++) {
-            lcp[i] = findPrefix(words[sort[i-1]], words[sort[i]]);
-        }
+        // 원래 입력 순서대로 출력
+        if (bestS > bestT) { int tmp = bestS; bestS = bestT; bestT = tmp; }
+        System.out.println(words[bestS]);
+        System.out.println(words[bestT]);
+    }
 
-        // 최대 접두사 길이 찾기
-        int maxLen = 0;
-        for (int i = 1; i < n; i++) {
-            if (lcp[i] > maxLen) {
-                maxLen = lcp[i];
+    // 트라이에 단어 삽입, 노드마다 first/second 갱신
+    static void insert(String s, int idx) {
+        Node cur = root;
+        for (int d=1;d<=s.length();d++) {
+            int c = s.charAt(d-1)-'a';
+            if (cur.next[c] == null) cur.next[c] = new Node();
+            cur = cur.next[c];
+            // 현재 idx를 노드의 first/second에 반영
+            if (idx < cur.first) {
+                cur.second = cur.first;
+                cur.first = idx;
+            } else if (idx < cur.second) {
+                cur.second = idx;
             }
-        }
-
-        // 클러스터 단위로 묶어서, 입력 순서 기준 가장 앞선 S,T 찾기
-        int ans1 = -1, ans2 = -1;
-        int bestSorder = Integer.MAX_VALUE, bestTorder = Integer.MAX_VALUE;
-
-        int start = 0;
-        for (int i = 1; i <= n; i++) {
-            // 클러스터 경계: lcp[i] < maxLen 이거나 배열 끝
-            if (i == n || lcp[i] < maxLen) {
-                if (i - start >= 2) {
-                    // sort[start..i-1] 이 한 덩어리(cluster)
-                    // 1) S: 해당 군에서 입력 순서 가장 빠른 단어
-                    int Sidx = sort[start];
-                    int Sorder = order[Sidx];
-                    for (int k = start + 1; k < i; k++) {
-                        int idx = sort[k];
-                        if (order[idx] < Sorder) {
-                            Sorder = order[idx];
-                            Sidx = idx;
-                        }
-                    }
-
-                    // 2) T: S가 뽑힌 뒤, 나머지 중 입력 순서 가장 빠른 단어
-                    int Tidx = -1;
-                    int Torder = Integer.MAX_VALUE;
-                    for (int k = start; k < i; k++) {
-                        int idx = sort[k];
-                        if (idx == Sidx) continue;
-                        if (order[idx] < Torder) {
-                            Torder = order[idx];
-                            Tidx = idx;
-                        }
-                    }
-
-                    // 3) 지금 군의 (Sorder, Torder) 를 전 군(bestSorder, bestTorder) 와 lex 비교
-                    if (Sorder < bestSorder
-                     || (Sorder == bestSorder && Torder < bestTorder)) {
-                        bestSorder = Sorder;
-                        bestTorder = Torder;
-                        ans1 = Sidx;
-                        ans2 = Tidx;
-                    }
-                }
-                start = i;
-            }
-        }
-
-        // 출력은 항상 원래 입력 순서 기준으로 S, T
-        if (order[ans1] < order[ans2]) {
-            System.out.println(words[ans1]);
-            System.out.println(words[ans2]);
-        } else {
-            System.out.println(words[ans2]);
-            System.out.println(words[ans1]);
         }
     }
 
-    // 두 문자열의 공통 접두사 길이 계산
-    public static int findPrefix(String a, String b) {
-        int len = Math.min(a.length(), b.length());
-        for (int i = 0; i < len; i++) {
-            if (a.charAt(i) != b.charAt(i)) return i;
+    // DFS로 노드 탐색, depth: 트리 깊이(접두사 길이)
+    static void dfs(Node node, int depth) {
+        if (node == null) return;
+        // 두 개 이상의 단어가 이 접두사를 공유하면 candidate
+        if (node.second < INF) {
+            if (depth > maxLen
+             || (depth == maxLen && (node.first < bestS
+                                     || (node.first == bestS && node.second < bestT)))
+            ) {
+                maxLen = depth;
+                bestS = node.first;
+                bestT = node.second;
+            }
         }
-        return len;
+        for (int i = 0; i < 26; i++) {
+            dfs(node.next[i], depth + 1);
+        }
     }
 }
