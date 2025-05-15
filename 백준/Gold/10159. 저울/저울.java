@@ -1,19 +1,22 @@
 import java.io.*;
 import java.util.*;
-
+/*
+ * 	메모리:13300KB	
+ * 	시간: 100ms
+ */
 public class Main {
     static final int MAX = 100;
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     public static void main(String[] args) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-        int N = Integer.parseInt(in.readLine());
-        int M = Integer.parseInt(in.readLine());
+        int N = Integer.parseInt(br.readLine());
+        int M = Integer.parseInt(br.readLine());
 
         // heavier[i][j] == true 면 i번이 j번보다 무겁다는 뜻
         boolean[][] heavier = new boolean[N][N];
 
         for (int m = 0; m < M; m++) {
-            String[] line = in.readLine().split(" ");
+            String[] line = br.readLine().split(" ");
             int a = Integer.parseInt(line[0]) - 1;
             int b = Integer.parseInt(line[1]) - 1;
             heavier[a][b] = true;
