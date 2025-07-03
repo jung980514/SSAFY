@@ -4,65 +4,93 @@ import java.util.*;
 public class Main {
     static int[] parent;
 
+    // Find (경로 압축)
+    static int find(int x) {
+        return parent[x] == x ? x : (parent[x] = find(parent[x]));
+    }
 
+    // Union
     static void union(int a, int b) {
         a = find(a);
         b = find(b);
         if (a != b) parent[b] = a;
     }
 
-    static int find(int x) {
-    	if (parent[x] == x) return x;
-    	return parent[x] = find(parent[x]);
+    // 스위핑 이벤트
+    static class Event implements Comparable<Event> {
+        int x, type, idx;
+        // type 0 = 시작, 1 = 끝
+        Event(int x, int type, int idx) {
+            this.x = x; this.type = type; this.idx = idx;
+        }
+        public int compareTo(Event o) {
+            if (this.x != o.x) return this.x - o.x;
+            return this.type - o.type; // 시작(0)이 끝(1)보다 먼저
+        }
     }
-    
+
+    // TreeSet 에 보관할 로그 객체 (높이 기준 정렬)
+    static class Log {
+        int y, idx;
+        Log(int y, int idx) { this.y = y; this.idx = idx; }
+    }
+
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        // 입력: N 통나무 개수, Q 쿼리 개수
-        String[] s = br.readLine().split(" ");
-        int N = Integer.parseInt(s[0]);
-        int Q = Integer.parseInt(s[1]);
+        // 1) 입력
+        String[] sp = br.readLine().split(" ");
+        int N = Integer.parseInt(sp[0]);
+        int Q = Integer.parseInt(sp[1]);
 
-        int[] x1 = new int[N];
-        int[] x2 = new int[N];
-        int[] y  = new int[N];
-        
+        int[] x1 = new int[N], x2 = new int[N], y = new int[N];
         for (int i = 0; i < N; i++) {
-            String[] s2 = br.readLine().split(" ");
-            x1[i] = Integer.parseInt(s2[0]);
-            x2[i] = Integer.parseInt(s2[1]);
-            y[i]  = Integer.parseInt(s2[2]);
+            String[] pp = br.readLine().split(" ");
+            x1[i] = Integer.parseInt(pp[0]);
+            x2[i] = Integer.parseInt(pp[1]);
+            y[i]  = Integer.parseInt(pp[2]);
         }
 
+        // 2) DSU 초기화
         parent = new int[N];
         for (int i = 0; i < N; i++) parent[i] = i;
 
-        //Subtask1 전용 스캔: x = 0..1000 (좌표 범위 작음)
-        List<Integer> list = new ArrayList<>();
-        for (int x=0;x<=1000;x++) {
-            list.clear();
-            // 현재 x를 덮는 통나무 인덱스를 모두 수집
-            for (int i = 0; i < N; i++) {
-                if (x1[i] <= x && x <= x2[i]) {
-                    list.add(i);
-                }
-            }
-            if (list.size() < 2) continue;  // 2개 이상일 때만 연결 고려
-            // y(높이) 오름차순 정렬 → 인접한 것들끼리 수직 점프 가능
-            Collections.sort(list, Comparator.comparingInt(i -> y[i]));
-            // 정렬된 리스트에서 이웃한 두 통나무를 union
-            for (int i = 0; i + 1 < list.size(); i++) {
-                union(list.get(i), list.get(i+1));
+        // 3) 이벤트 목록 생성 (2N개)
+        Event[] events = new Event[2 * N];
+        for (int i = 0; i < N; i++) {
+            events[2*i]   = new Event(x1[i], 0, i);
+            events[2*i+1] = new Event(x2[i], 1, i);
+        }
+        Arrays.sort(events);
+
+        // 4) 스위핑 + TreeSet(높이 기준)으로 인접 로그 union
+        TreeSet<Log> active = new TreeSet<>((a,b) -> 
+            a.y != b.y ? a.y - b.y : a.idx - b.idx
+        );
+        Log[] logs = new Log[N];
+        for (int i = 0; i < N; i++) logs[i] = new Log(y[i], i);
+
+        for (Event e : events) {
+            int idx = e.idx;
+            if (e.type == 0) {
+                // 시작: active에 추가 전, 위·아래 인접 로그와 union
+                Log cur = logs[idx];
+                Log lower = active.lower(cur);
+                Log higher= active.higher(cur);
+                if (lower != null) union(lower.idx, idx);
+                if (higher!= null) union(higher.idx, idx);
+                active.add(cur);
+            } else {
+                // 끝: active에서 제거
+                active.remove(logs[idx]);
             }
         }
 
-        // 두 통나무가 같은 컴포넌트인지 확인
+        // 5) 쿼리: 같은 컴포넌트인지 검사
         StringBuilder sb = new StringBuilder();
         for (int qi = 0; qi < Q; qi++) {
-            String[] s3 = br.readLine().split(" ");
-            int u = Integer.parseInt(s3[0]) - 1;
-            int v = Integer.parseInt(s3[1]) - 1;
-            // find(u)==find(v) 이면 이동 가능 → '1', 아니면 '0'
+            String[] pp = br.readLine().split(" ");
+            int u = Integer.parseInt(pp[0]) - 1;
+            int v = Integer.parseInt(pp[1]) - 1;
             sb.append(find(u) == find(v) ? '1' : '0').append('\n');
         }
         System.out.print(sb);
