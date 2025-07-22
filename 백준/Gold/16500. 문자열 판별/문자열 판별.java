@@ -6,6 +6,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
         String s = br.readLine();
         int n = Integer.parseInt(br.readLine());
+        //list는 contain O(N)
+        //Hashset은 contain O(1)
         Set<String> dict = new HashSet<>();
         int maxLen = 0; // 가장 긴 단어
         
