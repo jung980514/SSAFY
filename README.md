@@ -9,7 +9,7 @@
 <a href="./"><img alt="Last Commit" src="https://img.shields.io/github/last-commit/jung980514/SSAFY?label=last%20update"></a>
 <img alt="Language" src="https://img.shields.io/badge/language-Java-orange">
 <a href="./"><img alt="PRs Welcome" src="https://img.shields.io/badge/PRs-welcome-brightgreen"></a>
-<a href="https://solved.ac/profile/jung980514"><img alt="solved.ac" src="http://mazassumnida.wtf/api/mini/generate_badge?boj=jung980514"></a>
+<a href="https://solved.ac/profile/solar37"><img alt="solved.ac" src="http://mazassumnida.wtf/api/mini/generate_badge?boj=solar37"></a>
 
 </div>
 
